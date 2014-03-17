@@ -121,7 +121,7 @@ restly.init = function(r, opts) {
 
   // documentation page
   app.get(opts.docs_endpoint, function(req, res) {
-    
+
     var sections = [];
     for (var r in routesCollection) {
       sections.push(routesCollection[r].section);
