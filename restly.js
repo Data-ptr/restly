@@ -78,13 +78,23 @@ restly.init = function(r, opts) {
       }
     }
 
+    //Set up addition headers here
+    if(apicall.cross_origin) {
+      app.all('/', function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        next();
+      });
+    }
+
+
     // set up a express listener for each call
     switch(apicall.method) {
-      case 'put': 
-      
+      case 'put':
+
         (function(ac) {
           app.put(ac.endpoint, function (req,res) {
-            routes.parseRequest(ac, req, res);           
+            routes.parseRequest(ac, req, res);
           });
         })(apicall);
         break;
