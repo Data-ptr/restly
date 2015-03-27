@@ -30,6 +30,13 @@ restly.use = function(mw) {
 // init
 restly.init = function(r, opts) {
 
+  function addHeaders(apicall, res) {
+    if(apicall.cross_origin) {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    }
+  }
+
   // make sure all our defaults are set
   var opts = defaultOpts(opts);
 
@@ -94,6 +101,7 @@ restly.init = function(r, opts) {
 
         (function(ac) {
           app.put(ac.endpoint, function (req,res) {
+            addHeaders(ac, res);
             routes.parseRequest(ac, req, res);
           });
         })(apicall);
@@ -103,28 +111,31 @@ restly.init = function(r, opts) {
 
         (function(ac) {
           app.post(ac.endpoint, function (req,res) {
-            routes.parseRequest(ac, req, res);           
+            addHeaders(ac, res);
+            routes.parseRequest(ac, req, res);
           });
         })(apicall);
         break;
 
-      case 'delete': 
+      case 'delete':
 
         (function(ac) {
           app.delete(ac.endpoint, function (req,res) {
-            routes.parseRequest(ac, req, res);           
+            addHeaders(ac, res);
+            routes.parseRequest(ac, req, res);
           });
         })(apicall);
-        break;   
+        break;
 
-      case 'get': 
-        
+      case 'get':
+
         (function(ac) {
           app.get(ac.endpoint, function (req,res) {
-            routes.parseRequest(ac, req, res);           
+            addHeaders(ac, res);
+            routes.parseRequest(ac, req, res);
           });
         })(apicall);
-        break;    
+        break;
     }
 
   }
@@ -140,22 +151,22 @@ restly.init = function(r, opts) {
     sections = _.uniq(sections)
 
     // prepare the page data
-    var page = { 
+    var page = {
                   routes: routesCollection,
                   config: opts,
                   section: false,
                   sections: sections,
                   docs_endpoint: opts.docs_endpoint
                 };
-    
+
     // render the channel list page
     res.render(process.cwd()+"/node_modules/restly/views/index.jade", page);
-    
+
   });
 
   // documentation page by section
   app.get(opts.docs_endpoint+"section/:section", function(req, res) {
-    
+
     var sections = [];
     for (var r in routesCollection) {
       sections.push(routesCollection[r].section);
@@ -164,17 +175,17 @@ restly.init = function(r, opts) {
     sections = _.uniq(sections)
 
     // prepare the page data
-    var page = { 
+    var page = {
                   routes: routesCollection,
                   config: opts,
                   section: req.params.section,
                   sections: sections,
                   docs_endpoint: opts.docs_endpoint
                 };
-    
+
     // render the channel list page
     res.render(process.cwd()+"/node_modules/restly/views/index.jade", page);
-    
+
   });
 
   // listen on the specified port
@@ -190,15 +201,15 @@ restly.init = function(r, opts) {
         if (e.code === 'ENOENT') {
             console.log('\n    Cannot find SSL private key or certificate file.');
             console.log('   Make sure "'+opts.ssl_private_key+'" and "'+opts.ssl_certificate+'" exist.')
-            
+
             throw e;
         }
     }
 
     var credentials = { key: privateKey, cert: certificate };
-    
+
     var server = https.createServer(credentials, app);
-    
+
     server.listen(opts.port);
   } else {
       var server = app.listen(opts.port);
@@ -212,13 +223,13 @@ restly.init = function(r, opts) {
       console.log("Closed out remaining connections.");
       process.exit()
     });
-    
-    // if after 
+
+    // if after
     setTimeout(function() {
         console.error("Could not close connections in time, forcefully shutting down");
         process.exit()
    }, 3*1000);
-    
+
   }
 
   // listen for TERM signal .e.g. kill <pid>
@@ -263,7 +274,7 @@ var defaultOpts = function(opts) {
   if (!_.isString(defaults.protocol)) { defaults.protocol = "http"; }
   defaults.protocol = defaults.protocol.toLowerCase();
   if (defaults.protocol != 'http' && defaults.protocol != 'https') { defaults.protocol = 'http'; }
-  
+
   // sane port values
   if (!_.isNumber(defaults.port)) {
     // sane secure server values
@@ -273,7 +284,7 @@ var defaultOpts = function(opts) {
       defaults.port = 8000;
     }
   }
-  
+
   // sane docs endpoints value
   if (defaults.docs_endpoint != "/") {
     if (defaults.docs_endpoint == "") {
