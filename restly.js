@@ -24,7 +24,7 @@ app.use(express.static(__dirname+'/public'));
 
 // wrapper for passing middleware to express
 restly.use = function() {
-  app.use.apply(this, arguments);
+  app.use.apply(app, arguments);
 }
 
 // init
