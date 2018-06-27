@@ -4,16 +4,17 @@
   "description": "Lightweight, self documenting REST API framework, based on Express",
   "main": "restly.js",
   "dependencies": {
-    "express": "~3.4.0",
-    "moment": "~2.2.1",
-    "string": "~1.5.1",
-    "underscore": "~1.5.2",
-    "jade": "~0.35.0",
-    "async": "~0.2.9",
-    "redis": "~0.8.4"
+    "express": "latest",
+    "moment": "latest",
+    "string": "latest",
+    "underscore": "latest",
+    "pug": "latest",
+    "async": "latest",
+    "redis": "latest",
+    "body-parser": "latest"
   },
   "optionalDependencies": {
-    "hiredis": "~0.1.15"
+    "hiredis": "latest"
   },
   "repository": {
     "type": "git",
